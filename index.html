@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Minesweeper — Windows 98 Style</title>
+    <style>
+      :root {
+        --win-bg: #c0c0c0;
+        --win-white: #ffffff;
+        --win-dk: #808080;
+        --win-shadow: #404040;
+      }
+      html, body { height: 100%; margin: 0; background: var(--win-bg); }
+      body { font-family: Tahoma, "MS Sans Serif", Arial, sans-serif; }
+      .win98-window {
+        margin: 12px auto;
+        width: max-content;
+        background: var(--win-bg);
+        box-shadow: inset -1px -1px var(--win-shadow), inset 1px 1px var(--win-white),
+                    inset -2px -2px var(--win-dk), inset 2px 2px #dfdfdf;
+      }
+      .titlebar {
+        background: linear-gradient(90deg, #000080, #1084d0);
+        color: #fff;
+        padding: 3px 6px;
+        font-weight: bold;
+        display: flex; align-items: center; justify-content: space-between;
+      }
+      .content {
+        padding: 10px;
+        display: flex; flex-direction: column; gap: 8px;
+      }
+      .win98-panel {
+        background: var(--win-bg);
+        padding: 6px;
+        box-shadow: inset -1px -1px var(--win-dk), inset 1px 1px var(--win-white);
+        display:flex; gap:8px; align-items: center;
+      }
+      .win98-btn, select, input[type=number] {
+        background: var(--win-bg);
+        border: none;
+        box-shadow: inset -1px -1px var(--win-dk), inset 1px 1px var(--win-white),
+                    inset -2px -2px var(--win-shadow), inset 2px 2px #dfdfdf;
+        padding: 4px 8px;
+        font-family: inherit; font-size: 14px;
+        -webkit-appearance: none;
+      }
+      .win98-btn:active {
+        box-shadow: inset 1px 1px var(--win-dk), inset -1px -1px var(--win-white),
+                    inset 2px 2px var(--win-shadow), inset -2px -2px #dfdfdf;
+      }
+      #game {
+        outline: none;
+        margin: 0 auto;
+      }
+      .counter {
+        font-weight: bold;
+        padding: 2px 6px;
+        background: #000;
+        color: #f00;
+        font-family: "Digital-7 Mono", monospace;
+        box-shadow: inset -1px -1px var(--win-dk), inset 1px 1px var(--win-white);
+      }
+      .status { margin-left:8px; }
+      .row { display:flex; gap:10px; align-items:center; flex-wrap: wrap; }
+      label { font-size: 13px; }
+      #smileyBtn {
+        font-size: 20px;
+        width: 40px; height: 40px;
+        display: flex; align-items: center; justify-content: center;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.js"></script>
+  </head>
+  <body>
+    <div class="win98-window">
+      <div class="titlebar">Minesweeper<span>✕</span></div>
+      <div class="content">
+        <div class="win98-panel row">
+          <label for="difficulty">Difficulty:</label>
+          <select id="difficulty">
+            <option value="beginner">Beginner (9×9, 10 mines)</option>
+            <option value="intermediate">Intermediate (16×16, 40 mines)</option>
+            <option value="expert">Expert (30×16, 99 mines)</option>
+            <!-- <option value="custom">Custom…</option> -->
+          </select>
+          <span id="customFields" style="display:none">
+            W:<input id="cols" type="number" min="5" max="60" value="9" style="width:64px"/>
+            H:<input id="rows" type="number" min="5" max="40" value="9" style="width:64px"/>
+            Mines:<input id="mines" type="number" min="1" max="500" value="10" style="width:80px"/>
+          </span>
+          <span>⛏ Mines left: <span id="minesLeft" class="counter">000</span></span>
+          <button id="smileyBtn" class="win98-btn">🙂</button>
+          <span>⏱ Time: <span id="time" class="counter">000</span></span>
+          <span id="status" class="status"></span>
+        </div>
+        <div id="game"></div>
+      </div>
+    </div>
+    <script src="./src/main.js"></script>
+    <script>
+      const diffSelect = document.getElementById('difficulty');
+      const customFields = document.getElementById('customFields');
+      diffSelect.addEventListener('change', () => {
+        customFields.style.display = diffSelect.value === 'custom' ? 'inline-block' : 'none';
+      });
+
+      const smileyBtn = document.getElementById('smileyBtn');
+      smileyBtn.addEventListener('click', () => {
+        window.game.scene.keys['Game'].startNewFromUI();
+      });
+
+      // Update smiley based on English status text from the game scene
+      const statusObserver = new MutationObserver(() => {
+        const status = document.getElementById('status').textContent;
+        if (status.includes('Game Over')) smileyBtn.textContent = '😵';
+        else if (status.includes('You Win')) smileyBtn.textContent = '😎';
+        else smileyBtn.textContent = '🙂';
+      });
+      statusObserver.observe(document.getElementById('status'), { childList: true });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+{
+    "name": "minesweeper-phaser-win98",
+    "version": "1.0.0",
+    "description": "Клон Сапёра (Windows 98 стиль) на Phaser 3",
+    "scripts": {
+      "start": "http-server -p 8080 -o"
+    },
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+      "http-server": "^14.1.1"
+    }
+  }
