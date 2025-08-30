@@ -2,6 +2,8 @@
 
 A clone of the classic **Windows 98 Minesweeper**, built with Phaser 3 and styled with a retro Win98 look.  
 
+![minesweeper](assets/screenshot.png)
+
 ---
 
 ## Features
